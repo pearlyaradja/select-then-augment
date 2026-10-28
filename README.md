@@ -1,6 +1,6 @@
 # Select, Then Augment
 
-Code for **"Select, Then Augment: Filtering LoRA-Generated Synthetic Images for Lung Cancer Histopathology Classification"** (M. H. Pearlyaradja and R. Wijaya, Telkom University).
+Code for **"Select, Then Augment: Comparing Filters for LoRA-Generated Synthetic Images in Lung Cancer Histopathology Classification"** (M. H. Pearlyaradja and R. Wijaya, Telkom University).
 
 Class-specific LoRA adapters for Stable Diffusion v1.5 are trained on adenocarcinoma (ADC) and squamous cell carcinoma (SCC) patches of [LungHist700](https://doi.org/10.6084/m9.figshare.25459174) within five patient-level folds. Three filters (class consistency, feature-space realism, memorization) score the generated images, and EfficientNet-B0 classifiers trained with each selection are compared against real-only training with a patient-cluster bootstrap.
 
