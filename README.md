@@ -48,6 +48,7 @@ python src/05d_summarize.py
 python src/06a_bootstrap.py
 python src/06b_kid_fid.py
 python src/06d_patient_level.py
+python src/06g_copy_check.py
 ```
 
 The SCC adapter of fold 0 was retrained with `--seed 1234` (see the paper).
@@ -56,17 +57,18 @@ Everything ran on one 6 GB laptop GPU; LoRA training used fp16, gradient checkpo
 
 ## Results
 
-`results/` contains the numbers behind the paper, so you can check the analysis without retraining anything:
+`results/` contains the numbers behind the paper, so you can check the analysis without retraining anything. The scripts write to `outputs/`; `results/` is a copy of the relevant files with the same subfolders, so rename it to `outputs/` (or copy it there) to run the evaluation scripts on it.
 
 - `splits.csv`, `patch_splits.csv`: patient-level folds and patch assignments
 - `synthetic_manifest.csv`: prompt, seed, and settings of every generated image
-- `filter/`: per-image filter scores and validation-calibrated thresholds per fold
+- `filter/`: per-image filter scores and validation-calibrated thresholds per fold, KID of the synthetic sets per fold (`kid_check.csv`), the retraining check of the fold 0 SCC adapter (`retrain_fold0_scc.csv`)
+- `filter_clf/compare_tta.csv`: validation macro-F1 and AUC of the filter classifiers
 - `selection/selection_N200.csv`: which images were selected for C1–C4
 - `downstream/`: test predictions and metrics of all 75 runs
-- `eval/`: bootstrap CIs and paired differences (also leave-one-fold-out), KID/FID, patient-level results
+- `eval/`: bootstrap CIs and paired differences (also leave-one-fold-out), KID/FID, patient-level results, and the pixel check of the two images flagged as possible copies (`copy_check.csv`, `copy_check.png`)
 
 Generated images, adapters, and classifier weights are too large for the repository and are not included.
 
 ## License and data
 
-LungHist700 is released by its authors under CC BY 4.0. If you use it, please cite their paper.
+The code is released under the MIT License (see `LICENSE`). LungHist700 is released by its authors under CC BY 4.0. If you use it, please cite their paper.

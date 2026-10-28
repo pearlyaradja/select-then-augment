@@ -1,0 +1,3 @@
+path,fold,superclass,max_sim_train_feature,best_pixel_corr,nearest_train,val_median,val_max,in_C1,in_C2,in_C3,in_C4
+data/processed/synthetic/fold3/aca/syn_f3_aca_0318.png,3,aca,0.9306,0.177,data/processed/patches/aca_md/aca_md_40x_85_r0c1.png,0.242,0.495,True,True,False,False
+data/processed/synthetic/fold3/aca/syn_f3_aca_0920.png,3,aca,0.9348,0.145,data/processed/patches/aca_bd/aca_bd_20x_37_r1c1.png,0.242,0.495,False,True,False,False

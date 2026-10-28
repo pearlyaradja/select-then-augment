@@ -56,3 +56,6 @@ src/06f_kid_protocol_paper.py
 
 # Skrip runner lokal
 src/*.ps1
+
+# Versi kedua naskah
+paper/main_2021.*

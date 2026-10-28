@@ -23,7 +23,7 @@ Output (outputs/selection/):
   sensitivity.csv      ringkasan untuk beberapa N (dasar memilih N)
   gallery_N{N}_fold{k}.png  contoh terpilih vs terbuang per kondisi
 
-  python src/04e_select_topn.py --n 200 300 500 --main_n 300
+  python src/04e_select_topn.py --n 200 300 500 --main_n 200
 """
 import argparse
 from pathlib import Path
@@ -110,7 +110,7 @@ def gallery(sel, fold, n, path, per=6, size=128):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, nargs="+", default=[200, 300, 500])
-    ap.add_argument("--main_n", type=int, default=300, help="N yang dipakai untuk galeri")
+    ap.add_argument("--main_n", type=int, default=200, help="N yang dipakai untuk galeri (N final di paper = 200)")
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)

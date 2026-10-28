@@ -24,7 +24,7 @@ def examples(fold=1, n=3):
     real = ps[(ps.fold == fold) & (ps.split == "train") & (ps.tissue_frac > 0.5)]
     s = sel[sel.fold == fold]
     groups = [("Real (training)", None), ("Selected by C2 (realism)", "C2"),
-              ("Selected by C4 (all filters)", "C4")]
+              ("Selected by C4 (class + realism rank)", "C4")]
     fig, axes = plt.subplots(2, 3 * n, figsize=(7.16, 1.85))
     for r, (c, name) in enumerate([("aca", "ADC"), ("scc", "SCC")]):
         for g, (title, cond) in enumerate(groups):
@@ -65,7 +65,7 @@ def results():
     ax = axes[0]
     conds = ["C0", "C1", "C2", "C3", "C4"]
     label = {"C0": "C0 real only", "C1": "C1 random", "C2": "C2 realism",
-             "C3": "C3 class + memo.", "C4": "C4 all filters"}
+             "C3": "C3 class + memo.", "C4": "C4 class + realism rank"}
     sub = m[m.metric == "macro_f1"].set_index("cond").loc[conds]
     y = range(len(conds))[::-1]
     ax.hlines(y, sub.ci_low, sub.ci_high, color=BLUE, lw=1.5)

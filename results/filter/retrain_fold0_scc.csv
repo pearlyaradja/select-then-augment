@@ -1,0 +1,13 @@
+,lama,baru
+KID vs SCC asli,111.53543382831177,85.31478510023231
+KID vs ADC asli,90.31859229739119,87.25450589649851
+"P(SCC) rata-rata, clf fold 0",0.2860442101955414,0.4730508327484131
+lolos (a) kelas,22.0,205.0
+lolos (b) realism,99.0,320.0
+lolos (c) jiplakan,1000.0,1000.0
+lolos ketiganya (C4),10.0,111.0
+"% dinilai SCC, clf fold 0",22.0,50.5
+"% dinilai SCC, clf fold 1",78.0,87.0
+"% dinilai SCC, clf fold 2",62.0,44.0
+"% dinilai SCC, clf fold 3",55.50000000000001,73.5
+"% dinilai SCC, clf fold 4",79.5,94.0
