@@ -1,0 +1,58 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Model weights (besar, jangan di-push ke git)
+models/
+*.safetensors
+*.ckpt
+*.bin
+
+# Dataset (besar, jangan di-push ke git)
+data/raw/
+data/processed/
+
+# Hasil training dan output
+outputs/
+*.pt
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Claude Code local config
+.claude/settings.local.json
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+wandb/
+
+# Catatan internal & naskah paper (tidak dipublikasikan)
+CLAUDE.md
+CATATAN_HASIL.md
+RANCANGAN_TAHAP5.md
+.claude/
+paper/main.tex
+paper/main.pdf
+paper/*.zip
+paper/figs/
+
+# Dataset metadata (unduh dari sumber LungHist700)
+data/metadata.csv
+
+# Perbandingan eksternal (tidak dipakai di paper)
+src/06f_kid_protocol_paper.py
+
+# Skrip runner lokal
+src/*.ps1

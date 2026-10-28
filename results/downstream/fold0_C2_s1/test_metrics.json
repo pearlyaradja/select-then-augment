@@ -1,0 +1,12 @@
+{
+  "fold": 0,
+  "cond": "C2",
+  "seed": 1,
+  "val_best_macro_f1": 0.8422622528950754,
+  "val_best_auc": 0.9384403935185186,
+  "test_macro_f1": 0.7499856511507776,
+  "test_auc": 0.826861956202234,
+  "test_recall_ADC": 0.7440476190476191,
+  "test_recall_SCC": 0.7561728395061729,
+  "test_acc": 0.75
+}
