@@ -2,7 +2,7 @@
 
 Code for **"Select, Then Augment: Comparing Filters for LoRA-Generated Synthetic Images in Lung Cancer Histopathology Classification"** (M. H. Pearlyaradja and R. Wijaya, Telkom University).
 
-Class-specific LoRA adapters for Stable Diffusion v1.5 are trained on adenocarcinoma (ADC) and squamous cell carcinoma (SCC) patches of [LungHist700](https://doi.org/10.6084/m9.figshare.25459174) within five patient-level folds. Three filters (class consistency, feature-space realism, memorization) score the generated images, and EfficientNet-B0 classifiers trained with each selection are compared against real-only training with a patient-cluster bootstrap.
+We train one LoRA adapter for Stable Diffusion v1.5 per class (adenocarcinoma, squamous cell carcinoma) and per patient-level fold of [LungHist700](https://doi.org/10.6084/m9.figshare.25459174), generate 10,000 patches, and score each one for class consistency, feature-space realism, and memorization. EfficientNet-B0 classifiers trained with each selection are then compared with real-only training using a patient-cluster bootstrap.
 
 ## Pipeline
 
@@ -52,11 +52,11 @@ python src/06d_patient_level.py
 
 The SCC adapter of fold 0 was retrained with `--seed 1234` (see the paper).
 
-The experiments ran on a single 6 GB laptop GPU (fp16, gradient checkpointing, batch size 1 with gradient accumulation for LoRA).
+Everything ran on one 6 GB laptop GPU; LoRA training used fp16, gradient checkpointing, and batch size 1 with gradient accumulation.
 
 ## Results
 
-`results/` holds the outputs reported in the paper, so the analysis can be checked without retraining:
+`results/` contains the numbers behind the paper, so you can check the analysis without retraining anything:
 
 - `splits.csv`, `patch_splits.csv`: patient-level folds and patch assignments
 - `synthetic_manifest.csv`: prompt, seed, and settings of every generated image
@@ -65,8 +65,8 @@ The experiments ran on a single 6 GB laptop GPU (fp16, gradient checkpointing, b
 - `downstream/`: test predictions and metrics of all 75 runs
 - `eval/`: bootstrap CIs and paired differences (also leave-one-fold-out), KID/FID, patient-level results
 
-Generated images, adapters, and classifier weights are not included because of their size.
+Generated images, adapters, and classifier weights are too large for the repository and are not included.
 
 ## License and data
 
-LungHist700 is released by its authors under CC BY 4.0; please cite their paper when using it.
+LungHist700 is released by its authors under CC BY 4.0. If you use it, please cite their paper.
