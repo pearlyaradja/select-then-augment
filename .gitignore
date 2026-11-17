@@ -59,3 +59,8 @@ src/*.ps1
 
 # Versi kedua naskah
 paper/main_2021.*
+paper/Paper_*.pdf
+
+# Backup naskah & formulir revisi konferensi (tidak dipublikasikan)
+paper/_backup/
+paper/*.xlsx

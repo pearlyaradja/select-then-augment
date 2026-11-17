@@ -18,32 +18,47 @@ BLUE, INK, MUTED, GRID = "#2a78d6", "#0b0b0b", "#52514e", "#e4e3df"
 plt.rcParams.update({"font.family": "serif", "font.size": 8})
 
 
-def examples(fold=1, n=3):
+def examples(fold=1, n=4):
     ps = pd.read_csv(ROOT / "outputs" / "patch_splits.csv")
     sel = pd.read_csv(ROOT / "outputs" / "selection" / "selection_N200.csv")
     real = ps[(ps.fold == fold) & (ps.split == "train") & (ps.tissue_frac > 0.5)]
     s = sel[sel.fold == fold]
-    groups = [("Real (training)", None), ("Selected by C2 (realism)", "C2"),
-              ("Selected by C4 (class + realism rank)", "C4")]
-    fig, axes = plt.subplots(2, 3 * n, figsize=(7.16, 1.85))
+    groups = [("Real (training)", None), ("C2 (realism)", "C2"), ("C4 (class + realism)", "C4")]
+    # the score(s) each condition ranked by are printed in bold above its images
+    used = {"C2": {"d"}, "C4": {"p", "d"}}
+    # single-column layout: each group shows its n images as a 2-wide grid, with thin
+    # spacer columns between groups; ADC and SCC rows are told apart by their labels
+    k = n // 2
+    fig = plt.figure(figsize=(3.5, 3.35))
+    gs = fig.add_gridspec(2 * k, 3 * 2 + 2, width_ratios=[1, 1, 0.1, 1, 1, 0.1, 1, 1],
+                          left=0.06, right=0.995, top=0.885, bottom=0.005, wspace=0.05, hspace=0.5)
     for r, (c, name) in enumerate([("aca", "ADC"), ("scc", "SCC")]):
         for g, (title, cond) in enumerate(groups):
             if cond is None:
-                paths = real[real.superclass == c].patch_path.sample(n, random_state=3)
+                rows = real[real.superclass == c].sample(n, random_state=3).rename(columns={"patch_path": "path"})
             else:
                 other = "C4" if cond == "C2" else "C2"
                 # images picked by both conditions are left out so the contrast is visible
-                paths = s[s[cond] & ~s[other] & (s.superclass == c)].path.sample(n, random_state=0)
-            for j, p in enumerate(paths):
-                ax = axes[r, g * n + j]
-                ax.imshow(Image.open(ROOT / p).convert("RGB").resize((256, 256)))
+                rows = s[s[cond] & ~s[other] & (s.superclass == c)].sample(n, random_state=0)
+            for j, (_, row) in enumerate(rows.iterrows()):
+                ax = fig.add_subplot(gs[r * k + j // 2, g * 3 + j % 2])
+                ax.imshow(Image.open(ROOT / row.path).convert("RGB").resize((256, 256)))
                 ax.set_xticks([]), ax.set_yticks([])
                 for sp in ax.spines.values():
                     sp.set_visible(False)
-                if r == 0 and j == 1:
-                    ax.set_title(title, fontsize=8, color=INK)
-        axes[r, 0].set_ylabel(name, fontsize=8, color=INK)
-    fig.subplots_adjust(left=0.03, right=0.995, top=0.88, bottom=0.01, wspace=0.04, hspace=0.06)
+                if r == 0 and j == 0:
+                    # group title centred over its two columns, above the score lines
+                    ax.text(1.025, 1.5, title, transform=ax.transAxes,
+                            ha="center", va="bottom", fontsize=7, color=INK)
+                if g == 0 and j == 0:
+                    ax.text(-0.12, -0.15, name, transform=ax.transAxes, rotation=90,
+                            ha="center", va="center", fontsize=7, color=INK)
+                if cond is not None:
+                    # two stacked lines so the scores fit the narrow tiles
+                    for y, key, txt in [(1.25, "p", f"$p$ = {row.p_intended:.2f}"),
+                                        (1.04, "d", f"$d$ = {row.knn_dist:.2f}")]:
+                        ax.text(0.5, y, txt, transform=ax.transAxes, ha="center", va="bottom", fontsize=5.5,
+                                color=INK, fontweight="bold" if key in used[cond] else "normal")
     fig.savefig(OUT / "fig_examples.jpg", dpi=300, pil_kwargs={"quality": 90})
 
 

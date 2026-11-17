@@ -11,6 +11,9 @@ Data fold k:
   test  = patch ASLI split "test"   -> dievaluasi SEKALI di akhir, sama untuk C0-C4
 Sintetis: outputs/selection/selection_N{N}.csv (Tahap 4e), hanya baris fold k.
   C0 = tanpa sintetis | C1 acak | C2 realism | C3 kelas+jiplakan | C4 gabungan
+Revisi camera-ready:
+  R1-R9 = undian acak tambahan (selection_N{N}_random.csv, 07a_random_draws.py)
+  --syn_dir synthetic_colornorm = gambar sintetis yang sama, warna dinormalisasi (07b)
 
 KENAPA jumlah STEP tetap (bukan epoch): C1-C4 punya ~18% data lebih banyak dari C0.
 Dengan epoch tetap, C1-C4 mendapat lebih banyak update bobot -> perbedaan hasil bisa
@@ -52,7 +55,7 @@ clf4a = importlib.util.module_from_spec(_spec)
 sys.modules["clf4a"] = clf4a  # perlu untuk worker DataLoader di Windows (spawn)
 _spec.loader.exec_module(clf4a)
 
-CONDS = ["C0", "C1", "C2", "C3", "C4"]
+CONDS = ["C0", "C1", "C2", "C3", "C4", *(f"R{i}" for i in range(1, 10))]
 
 
 def infinite(loader):
@@ -97,6 +100,8 @@ def main():
     ap.add_argument("--subset", type=int, default=0, help=">0: N patch real train/val/test saja (uji coba)")
     ap.add_argument("--num_workers", type=int, default=6, help="worker data TRAIN saja")
     ap.add_argument("--tag", type=str, default="")
+    ap.add_argument("--syn_dir", choices=["synthetic", "synthetic_colornorm"], default="synthetic",
+                    help="folder gambar sintetis di data/processed (colornorm: revisi Review 1)")
     args = ap.parse_args()
 
     random.seed(args.seed)
@@ -121,7 +126,8 @@ def main():
 
     syn = pd.DataFrame(columns=["patch_path", "label"])
     if args.cond != "C0":
-        sel = pd.read_csv(ROOT / "outputs" / "selection" / f"selection_N{args.n_syn}.csv")
+        suffix = "_random" if args.cond.startswith("R") else ""
+        sel = pd.read_csv(ROOT / "outputs" / "selection" / f"selection_N{args.n_syn}{suffix}.csv")
         s = sel[sel[args.cond]]
         # Sintetis fold lain dibuat LoRA yang dilatih dari pasien test fold ini -> bocor.
         # Jadi hanya fold ini, dan dicek ulang lewat path file (bukan hanya kolom fold).
@@ -130,6 +136,12 @@ def main():
         assert cnt == {"aca": args.n_syn, "scc": args.n_syn}, f"jumlah sintetis salah: {cnt}"
         assert s.path.str.contains(f"/fold{args.fold}/").all(), "ada sintetis dari fold lain"
         syn = s.rename(columns={"path": "patch_path"})[["patch_path", "label"]]
+        if args.syn_dir != "synthetic":
+            # Gambar yang SAMA (nama & seleksi identik), hanya warnanya dinormalisasi.
+            syn["patch_path"] = syn.patch_path.str.replace(
+                "data/processed/synthetic/", f"data/processed/{args.syn_dir}/", n=1, regex=False)
+            missing = [p for p in syn.patch_path if not (ROOT / p).exists()]
+            assert not missing, f"{len(missing)} file {args.syn_dir} belum ada, jalankan 07b dulu"
     print(f"[CHECK] {args.cond}: sintetis {len(syn)} "
           f"(ADC {int((syn.label == 0).sum())}, SCC {int((syn.label == 1).sum())}), semua dari fold {args.fold}")
 
